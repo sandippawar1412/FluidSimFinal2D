@@ -2,6 +2,10 @@
 #define _KEYBOARD_H
 #include <stdlib.h>
 #include <iostream>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+//#include "main.h"
 //#include "commonData.h"
 ///*
 //#define VEL 1
@@ -43,24 +47,62 @@
 //extern int winId;
 //
 //
-////enum fluidBody{ DAM_BREAK=1,DAM_CENTER=2,STATIC_BED=3,DOUBLE_DAM=4} fBT=DAM_CENTER ; //fluidBodyType
+enum fluidBody{ DAM_BREAK=1,DAM_CENTER=2,STATIC_BED=3,DOUBLE_DAM=4} fBT=DAM_CENTER ; //fluidBodyType
 //
 bool isPause = false;
 int swich = 0;
+
+void idleFun();
+void initMain();
+void initParticles();
 void KeyPressed (unsigned char key, int x, int y)
 {
-	if (key==27)
-		exit(0);
-	switch( (key) )
-	{
-		
-		case 'p' :
-				isPause = !isPause;
-				std::cout<<isPause<<std::endl;
+if (key==27)
+	exit(0);
+switch( (key) )
+{
+
+	case '1' :
+				fBT = DAM_BREAK;
+				initMain();
+				glutPostRedisplay();
 				break;
-		case 's':
-				swich = (swich+1)%4;
-				break;	
+	case 'i' :
+				//initMain();
+				//glutPostRedisplay();
+				initParticles();
+				break;
+	case '2':
+				fBT = DAM_CENTER;
+				initMain();
+				glutPostRedisplay();
+				break;
+case '3':
+				fBT = STATIC_BED;
+				initMain();
+				glutPostRedisplay();
+				break;
+	
+case '4':
+				fBT = DOUBLE_DAM;
+				initMain();
+				glutPostRedisplay();
+				break;
+		
+	case 'p' :
+			isPause = !isPause;
+			std::cout<<isPause<<std::endl;
+			break;
+	case 's':
+			swich = (swich+1)%4;
+			break;
+	case 'n' :
+				idleFun();
+				break;
+	/*case 'f':
+			render3DFlag = (render3DFlag+1)	% 2;
+			glutPostRedisplay();
+			break;*/
 //		default:
 //			output1 = key;
 //			anyUpdation = true;
@@ -158,9 +200,42 @@ void KeyPressed (unsigned char key, int x, int y)
 //
 //
 //
-	}
+}
 }
 //
 //
+/*
+float xRotated, yRotated, zRotated;
+void SpecialKeyPressed(int key, int x, int y)
+{
+ switch (key)
+      {
+       case GLUT_KEY_UP:
+						yRotated += 11;
+						break;
+       case GLUT_KEY_DOWN:
+						yRotated -= 11;
+						break;
+       case GLUT_KEY_LEFT:
+  						   xRotated += 11;
+						break;
+       case GLUT_KEY_RIGHT:
+						xRotated -= 11;
+						break;
+       case GLUT_KEY_PAGE_DOWN:
+							zRotated += 11;
+                    	    break;
+       case GLUT_KEY_PAGE_UP:
+						zRotated -= 11;
+                	    break;
+       default:
+			break;
+      }
+     glutPostRedisplay();
+}*/
+
+
+
+
 #endif
 

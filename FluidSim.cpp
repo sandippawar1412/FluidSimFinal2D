@@ -10,7 +10,6 @@
 #include <sys/time.h>
 #include "pcgsolver/util.h"
 #include <cassert>
-#include "helper.h"
 
 using namespace std;
 
@@ -588,9 +587,9 @@ void FluidSim :: extrapolate2D(matrix<double> &grid, matrix<int> &valid) //keep
 
 
 	for(int layers = 0; layers < 2; ++layers) {
-		//copyMat(old_valid, valid);
+
 		 old_valid = valid; //trying to parallelize... increasung time
-		//copyMat(temp_grid, grid);
+		
 		temp_grid = grid; //ZPARA
 		int nj = temp_grid.size2()-1;
 		int ni = temp_grid.size1()-1;
@@ -634,7 +633,7 @@ void FluidSim :: extrapolate2D(matrix<double> &grid, matrix<int> &valid) //keep
 					}
 				}
 			}
-		//copyMat(grid, temp_grid);
+		
 		//grid = temp_grid; //update with the new changes
 	}
 }

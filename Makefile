@@ -11,7 +11,7 @@ OPTFLAG = -O3
 
 .PHONY:clean
 
-OBJ = main.o GridStag.o  FluidSim.o  Particles.o Printer.o helper.o Renderer.o
+OBJ = main.o GridStag.o  FluidSim.o  Particles.o Printer.o  Renderer.o
 LIBS = $(GL_LIBS)
 
 all: $(OBJ) liquid2D
@@ -29,7 +29,7 @@ clean:
 #DEPENDENCIES- DO NOT DELETE
 GridStag.o : GridStag.h ParameterFLAGS.hpp
 Renderer.o : Renderer.h
-FluidSim.o : FluidSim.h ./pcgsolver/*.h ParameterFLAGS.hpp helper.h
+FluidSim.o : FluidSim.h ./pcgsolver/*.h ParameterFLAGS.hpp 
 main.o : main.h commonData.h ParameterFLAGS.hpp keyboard.h
 Printer.o : Printer.h
 Particles.o : Particles.h

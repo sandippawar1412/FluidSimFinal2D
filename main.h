@@ -26,7 +26,6 @@ using namespace boost::numeric::ublas;
 
 
 
-enum fluidBody{ DAM_BREAK=1,DAM_CENTER=2,STATIC_BED=3,DOUBLE_DAM=4} fBT=DAM_CENTER ; //fluidBodyType
 double timestep = 0.01;
 
 GridStag* sGrid = new GridStag;
@@ -34,7 +33,7 @@ Printer * print = new Printer;
 FluidSim* fluidSim = new FluidSim;
 
 
-void init ( void ) ;
+void initMain ( void ) ;
 void animate () ;
 
 

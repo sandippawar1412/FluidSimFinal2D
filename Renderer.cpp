@@ -6,6 +6,8 @@
 
 //using namespace std;
 extern double zoomFactor;
+#define DL
+//#undef DL
 
 void Renderer :: init(GridStag* grid)
 {
@@ -38,6 +40,7 @@ void Renderer :: initRenderer()
 	stepY = -1*(gridLBY)*2/nY;
 }
 
+
 void Renderer :: renderGrid()
 {
 	int nX = (this->sGrid)->nX;
@@ -47,7 +50,7 @@ void Renderer :: renderGrid()
 	double gridLBX = this->gridLBX+stepX;
 	double gridLBY = this->gridLBY+stepY;
 	int fillFlag = 0;
-
+#ifndef  DL
 	for (int i=1;i< nX-1;i++){
 		for (int j=1;j< nY-1;j++){
 			glColor3f(1,0,0);//set fill color..used if fillFlag=true
@@ -57,6 +60,77 @@ void Renderer :: renderGrid()
 		gridLBY += stepY;
 		gridLBX = this->gridLBX+stepX;
 	}
+#endif
+#ifdef DL
+/*
+nX = nY=32;
+GLfloat* vertices = new GLfloat[nX*nY*2*4];
+	int index=0;
+	for (int i=1;i< nX-1;i++){
+		for (int j=1;j< nY-1;j++){
+			vertices[index++] = gridLBX;// + stepX*(j-1) ;
+			vertices[index++] = gridLBY;// + stepY*(i-1) ;
+
+			vertices[index++] = gridLBX;// + stepX*(j-1) ;
+			vertices[index++] = gridLBY + stepY;// *(i) ;
+
+			vertices[index++] = gridLBX + stepX;// *(j) ;
+			vertices[index++] = gridLBY + stepY;// *(i) ;
+
+			vertices[index++] = gridLBX + stepX;// *(j) ;
+			vertices[index++] = gridLBY;// + stepY *(i-1) ;
+
+		}
+		gridLBY += stepY;
+		gridLBX = this->gridLBX+stepX;
+	}
+
+
+    glColor3f(.2,.2,.2); //unComment to show grid lines
+			
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_POINTS, 0, index);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+*/
+
+//nX = nY=64;
+GLfloat* vertices = new GLfloat[(nX)*2*2*2];
+	int index=0;
+gridLBX = gridLBY = 0;
+	for (int i=0;i< nX;i++){
+			vertices[index++] = gridLBX;// + stepX*(j-1) ;
+			vertices[index++] = gridLBY;// + stepY*(i-1) ;
+
+			vertices[index++] = gridLBX;// + stepX*(j-1) ;
+			vertices[index++] = gridLBY+stepY*nX;// + stepY*(i-1) ;
+
+		gridLBX += stepX;
+	}
+gridLBX = gridLBY = 0;
+	
+	for (int i=0;i< nY;i++){
+			vertices[index++] = gridLBX;// + stepX*(j-1) ;
+			vertices[index++] = gridLBY;// + stepY*(i-1) ;
+
+			vertices[index++] = gridLBX+stepY*nX;// + stepX*(j-1) ;
+			vertices[index++] = gridLBY;// + stepY*(i-1) ;
+
+		gridLBY += stepY;
+	}
+	
+
+    glColor3f(.2,.2,.2); //unComment to show grid lines
+			
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_LINES, 0, index);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	delete vertices; 
+#endif
+
 	//renderBoundary();
 }
 
@@ -69,7 +143,7 @@ void Renderer :: renderBoundary()
 	double gridLBX = this->gridLBX;
 	double gridLBY = this->gridLBY;
 	int fillFlag = 0;
-
+#ifndef  DL
 	for (int i=0;i< nX;i++){
 		for (int j=0;j< nY;j++){
 			if(i==0||j==0||i==nX-1||j==nY-1)
@@ -82,6 +156,12 @@ void Renderer :: renderBoundary()
 		gridLBY += stepY;
 		gridLBX = this->gridLBX;
 	}
+#endif
+#ifdef DL
+
+#endif
+
+
 
 }
 
@@ -436,6 +516,29 @@ void Renderer :: renderParticles()
     //renderGrid();
     //glColor3f(0.2,0.2,0.9);
     //renderBoundary();
+#ifdef DL
+     GLfloat *vertices	;
+	vertices = new GLfloat[sGrid->fluidParticles.size()*2];
+    #pragma omp parallel for	
+    for (unsigned i = 0; i < sGrid->fluidParticles.size() ; i++ ){
+	vertices[2*i] =   sGrid->fluidParticles.at(i)->x ;
+	vertices[2*i+1] =   sGrid->fluidParticles.at(i)->y ;
+    }
+
+    glColor3f(0,0,0.6);
+    glPointSize(4);
+
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+// draw a cube
+	glDrawArrays(GL_POINTS, 0, sGrid->fluidParticles.size());
+
+// deactivate vertex arrays after drawing
+	glDisableClientState(GL_VERTEX_ARRAY);
+#endif
+#ifndef DL
  	for (unsigned i = 0; i < sGrid->fluidParticles.size() ; i++ ){
 	glPointSize(4);
 	glBegin(GL_POINTS);
@@ -443,7 +546,9 @@ void Renderer :: renderParticles()
 		glColor3f(0,0,0.6);
 		glVertex2d(sGrid->fluidParticles.at(i)->x,sGrid->fluidParticles.at(i)->y);
 	glEnd();
+
 	}
+#endif
 }
 
 void Renderer :: renderParticle(double x, double y,double R,double G,double B,int psize)
